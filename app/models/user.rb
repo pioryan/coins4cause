@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   has_many :authentications, :dependent => :delete_all
+  has_many :transactions
 
   before_save :set_empty_logo
 
