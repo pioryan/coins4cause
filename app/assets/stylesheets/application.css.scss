@@ -1,0 +1,12 @@
+@import "bootstrap";
+@import "jumbotron-narrow";
+
+.thumbnail.cause{
+  .description{
+    height: 100px;
+    width: auto;
+  }
+  img{
+    max-height: 150px;
+  }
+}

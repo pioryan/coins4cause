@@ -1,0 +1,12 @@
+.row
+  - @causes.each do |cause|
+    .col-sm-6.col-md-4
+      .thumbnail.cause
+        %img{alt: "...", "src" => cause.logo}/
+        .caption
+          %h4= cause.name
+          %p.description
+            = cause.description
+          %p
+            %a.coinbase-button{"data-button-style" => "donation_large", "data-code" => "2d3ab98d64e7dd3eaa9e293930fd6440", "data-custom" => cause.nickname, href: "https://coinbase.com/checkouts/2d3ab98d64e7dd3eaa9e293930fd6440"} Donate Bitcoins
+            %script{src: "https://coinbase.com/assets/button.js", type: "text/javascript"}
