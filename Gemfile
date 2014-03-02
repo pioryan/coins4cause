@@ -37,6 +37,7 @@ gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'ransack',     github: 'ernie/ransack'
 gem 'cancan'
 gem 'rolify'
+gem "twitter", "~> 5.7.1"
 group :development do
   gem 'mysql2'
 end
