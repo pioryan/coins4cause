@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
       params = {name: name, nickname: nickname, description: description}
       params = to_curl(params)
       response = Curl::Easy.http_post("#{ENV['BONSAI_URL']}/user/user/#{self.nickname}", *params){|curl| curl.timeout = 10}
-      Rails.logger.error "Indexing >>>>>>>>>>>>>>#{response.inspect}"
+      Rails.logger.error "Indexing >>>>>>>>>>>>>>#{response.body_str}"
     end
   end
 
@@ -71,5 +71,14 @@ class User < ActiveRecord::Base
       post_arr << Curl::PostField.content(k.to_s, v)
     }
     post_arr
+  end
+
+  def self.bonsai_search(query)
+    if Rails.env.production? && self.is_cause?
+      params = {:query => {:text => query} }
+      params = to_curl(params)
+      response = Curl::Easy.http_get("#{ENV['BONSAI_URL']}/user/user/_search", *params){|curl| curl.timeout = 10}
+      Rails.logger.error "search result >>>>>>>>>>>>>>#{response.body_str}"
+    end
   end
 end
