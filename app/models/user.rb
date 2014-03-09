@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  include BonsaiSearch
   rolify
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -55,32 +56,12 @@ class User < ActiveRecord::Base
   end
 
   def index_cause
-    if Rails.env.production? && self.is_cause?
+    bonsai_url = ENV['BONSAI_URL']
+    if bonsai_url && self.is_cause?
       params = {name: name, nickname: nickname, description: description}
-      params = self.class.to_curl(params)
-      response = Curl::Easy.http_post("#{ENV['BONSAI_URL']}/user/user/#{self.nickname}", *params){|curl| curl.timeout = 10}
-      Rails.logger.error "Indexing >>>>>>>>>>>>>>#{response.body_str}"
-    end
-  end
-
-
-  def self.to_curl(params = {})
-    post_arr = []
-    params.each { |k, v|
-      next if v.nil?
-      post_arr << Curl::PostField.content(k.to_s, v)
-    }
-    post_arr
-  end
-
-
-
-  def self.bonsai_search(query)
-    if Rails.env.production?
-      params = {:query => {:text => query} }
-      params = to_curl(params)
-      response = Curl::Easy.http_get("#{ENV['BONSAI_URL']}/user/user/_search", *params){|curl| curl.timeout = 10}
-      Rails.logger.error "search result >>>>>>>>>>>>>>#{response.body_str}"
+      params = params.to_json
+      response = `curl -XPOST #{bonsai_url}/user/user/#{self.nickname} -d '#{params}'`
+      Rails.logger.error "Indexing >>>>>>>>>>>>>>#{response.inspect}"
     end
   end
 end
