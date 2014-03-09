@@ -74,7 +74,7 @@ class User < ActiveRecord::Base
   end
 
   def self.bonsai_search(query)
-    if Rails.env.production? && self.is_cause?
+    if Rails.env.production?
       params = {:query => {:text => query} }
       params = to_curl(params)
       response = Curl::Easy.http_get("#{ENV['BONSAI_URL']}/user/user/_search", *params){|curl| curl.timeout = 10}
