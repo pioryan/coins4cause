@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
 
   before_save :set_empty_logo
   after_create :index_cause
-  after_update :index_cause, :if => Proc.new {cause_changed?}
+  after_update :index_cause
 
   def apply_omniauth(auth)
     # In previous omniauth, 'user_info' was used in place of 'raw_info'
@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  
+
   def to_curl(params = {})
     post_arr = []
     params.each { |k, v|
