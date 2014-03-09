@@ -39,6 +39,8 @@ gem 'cancan'
 gem 'rolify'
 gem "twitter", "~> 5.7.1"
 gem "state_machine"
+gem "curb"
+
 group :development do
   gem 'mysql2'
 end

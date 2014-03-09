@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
   has_many :transactions
 
   before_save :set_empty_logo
+  after_create :index_cause
+  after_update :index_cause, :if => Proc.new {cause_changed?}
 
   def apply_omniauth(auth)
     # In previous omniauth, 'user_info' was used in place of 'raw_info'
@@ -50,5 +52,24 @@ class User < ActiveRecord::Base
   def scrape_logo
     response = `curl -sL http://twitter.com/#{self.nickname} | grep profile_images | head -n1 | perl -p -e's/.*?http/http/;s/\".*//;s/_bigger//'`
     response.gsub("\n", "")
+  end
+
+  def index_cause
+    if Rails.environment.production? && self.is_cause?
+      params = {name: name, nickname: nickname, description: description}
+      params = to_curl(params)
+      response = Curl::Easy.http_post("#{ENV['BONSAI_URL']}/user/user/#{self.nickname}", *params){|curl| curl.timeout = 10}
+      Rails.logger.error "Indexing >>>>>>>>>>>>>>#{response.inspect}"
+    end
+  end
+
+  
+  def to_curl(params = {})
+    post_arr = []
+    params.each { |k, v|
+      next if v.nil?
+      post_arr << Curl::PostField.content(k.to_s, v)
+    }
+    post_arr
   end
 end
