@@ -8,6 +8,9 @@ class Ability
          can :manage, :all
        elsif user.is_cause?
          can :read, Transaction, {:user_id => user.id}
+         can :read, WithdrawalTransaction, {:user_id => user.id}
+         can :create, WithdrawalRequest
+         can :read, WithdrawalRequest, {:user_id => user.id}
          can :read, ActiveAdmin::Page, :name => "Dashboard"
        else
          can :read, :all

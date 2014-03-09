@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140302161939) do
+ActiveRecord::Schema.define(version: 20140309123110) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -50,10 +50,11 @@ ActiveRecord::Schema.define(version: 20140302161939) do
 
   create_table "transactions", force: true do |t|
     t.integer  "user_id"
-    t.decimal  "amount",     precision: 20, scale: 8, default: 0.0
+    t.decimal  "amount",                precision: 20, scale: 8, default: 0.0
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "type",       limit: 50
   end
 
   create_table "users", force: true do |t|
@@ -93,6 +94,16 @@ ActiveRecord::Schema.define(version: 20140302161939) do
     t.text     "body"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "withdrawal_requests", force: true do |t|
+    t.integer  "user_id"
+    t.decimal  "amount",         precision: 20, scale: 8, default: 0.0
+    t.string   "address"
+    t.integer  "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "transaction_id"
   end
 
 end

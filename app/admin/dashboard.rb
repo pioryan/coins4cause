@@ -21,7 +21,11 @@ ActiveAdmin.register_page "Dashboard" do
                transactions = current_user.transactions.limit(5)
              end
              transactions.map do |transaction|
-               li link_to("Donation for #{transaction.user.nickname} amounting to #{transaction.amount} BTC Cents, Received: #{transaction.created_at.strftime("%m/%d/%Y %I:%M%p") }", admin_transaction_path(transaction))
+               if transaction.type
+                 li link_to("Withdrawal for #{transaction.user.nickname} amounting to #{transaction.amount} BTC Cents, Completed: #{transaction.created_at.strftime("%m/%d/%Y %I:%M%p") }", admin_transaction_path(transaction))
+               else
+                 li link_to("Donation for #{transaction.user.nickname} amounting to #{transaction.amount} BTC Cents, Received: #{transaction.created_at.strftime("%m/%d/%Y %I:%M%p") }", admin_transaction_path(transaction))
+               end
              end
            end
          end
