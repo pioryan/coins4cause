@@ -55,7 +55,7 @@ class User < ActiveRecord::Base
   end
 
   def index_cause
-    if Rails.environment.production? && self.is_cause?
+    if Rails.env.production? && self.is_cause?
       params = {name: name, nickname: nickname, description: description}
       params = to_curl(params)
       response = Curl::Easy.http_post("#{ENV['BONSAI_URL']}/user/user/#{self.nickname}", *params){|curl| curl.timeout = 10}
