@@ -57,14 +57,14 @@ class User < ActiveRecord::Base
   def index_cause
     if Rails.env.production? && self.is_cause?
       params = {name: name, nickname: nickname, description: description}
-      params = to_curl(params)
+      params = self.class.to_curl(params)
       response = Curl::Easy.http_post("#{ENV['BONSAI_URL']}/user/user/#{self.nickname}", *params){|curl| curl.timeout = 10}
       Rails.logger.error "Indexing >>>>>>>>>>>>>>#{response.body_str}"
     end
   end
 
 
-  def to_curl(params = {})
+  def self.to_curl(params = {})
     post_arr = []
     params.each { |k, v|
       next if v.nil?
@@ -72,6 +72,8 @@ class User < ActiveRecord::Base
     }
     post_arr
   end
+
+
 
   def self.bonsai_search(query)
     if Rails.env.production?
